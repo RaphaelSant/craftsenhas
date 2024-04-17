@@ -2,6 +2,8 @@ const express = require("express");
 const mysql = require("mysql");
 const cors = require("cors");
 
+const verificarToken = require("./middlewares/authMiddleware.js");
+
 const loginController = require("./controllers/loginController.js");
 
 const app = express();
@@ -15,6 +17,11 @@ app.get("/", (re, res) => {
 
 // Controllers
 app.use("/", loginController);
+
+// Rota protegida
+app.get("/recursoProtegido", verificarToken, (req, res) => {
+    res.status(200).send("Acesso permitido ao recurso protegido");
+});
 
 app.listen(8081, () => {
     console.log("listening");
