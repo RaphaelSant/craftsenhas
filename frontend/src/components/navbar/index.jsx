@@ -2,7 +2,8 @@ import React from "react";
 import ProfatLogo from "../../assets/img/LogoProfat.png";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPowerOff } from "@fortawesome/free-solid-svg-icons";
+import { faPowerOff, faUser } from "@fortawesome/free-solid-svg-icons";
+import { jwtDecode } from "jwt-decode";
 
 
 
@@ -15,39 +16,71 @@ export default function Navbar() {
         return (window.location.href = "/");
     };
 
+    const token = localStorage.getItem('token');
+    let isAdmin = false;
+    let userName;
+
+    if (token) {
+        // Decodificar o token para acessar as informações
+        const decodedToken = jwtDecode(token);
+
+        // Verificar se o token indica que o usuário é administrador
+        isAdmin = decodedToken && decodedToken.isAdmin === 1; // 'role' é apenas um exemplo, você deve usar a chave correta no token
+        userName = decodedToken && decodedToken.nome_completo;
+    }
+
+
+    const decodedToken = jwtDecode(token);
+
+    //console.log(userName);
+    //console.log(token);
+    //console.log(decodedToken.isAdmin);
+    //console.log(isAdmin);
+
     return (
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
-            <div class="container">
+        <nav className="navbar navbar-expand-lg bg-body-tertiary">
+            <div className="container">
                 <Link to="/PaginaInicial" className="navbar-brand"><img src={ProfatLogo} alt="Profat Logo" /></Link>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link" href="https://www.google.com">Relatórios</a>
+                <div className="collapse navbar-collapse d-flex justify-content-between" id="navbarSupportedContent">
+                    <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li className="nav-item">
+                            <a className="nav-link" href="https://www.google.com">Relatórios</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="https://www.google.com">Convênios</a>
+                        <li className="nav-item">
+                            <a className="nav-link" href="https://www.google.com">Convênios</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="https://www.google.com" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Administrador
+                        {isAdmin && (
+                            <li className="nav-item dropdown">
+                                <a className="nav-link dropdown-toggle" href="https://www.google.com" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Administrador
+                                </a>
+                                <ul className="dropdown-menu">
+                                    <li><a className="dropdown-item" href="https://www.google.com">Cadastrar Usuário</a></li>
+                                    <li><a className="dropdown-item" href="https://www.google.com">Editar Usuário</a></li>
+                                    <li><hr className="dropdown-divider" /></li>
+                                    <li><a className="dropdown-item" href="https://www.google.com">Something else here</a></li>
+                                </ul>
+                            </li>
+                        )}
+
+                    </ul>
+                    <ul className="navbar-nav">
+                        <li className="nav-item dropdown">
+                            <a className="nav-link dropdown-toggle" href="https://www.google.com" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <FontAwesomeIcon icon={faUser} /> {userName}
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="https://www.google.com">Cadastrar Usuário</a></li>
-                                <li><a class="dropdown-item" href="https://www.google.com">Editar Usuário</a></li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="https://www.google.com">Something else here</a></li>
+                            <ul className="dropdown-menu text-center">
+                                <li><a className="dropdown-item" href="https://www.google.com">Editar Senha</a></li>
+                                <li><hr className="dropdown-divider" /></li>
+                                <li className="dropdown-item" onClick={logout}>
+                                    <Link className="nav-link text-danger-emphasis"><FontAwesomeIcon icon={faPowerOff} /> Sair</Link>
+                                </li>
                             </ul>
                         </li>
-                        <li className="nav-item d-flex">
-                            <button className="nav-link" onClick={logout}>
-                                {" "}
-                                
-                                <FontAwesomeIcon icon={faPowerOff} /> Logout
-                            </button>
-                        </li>
+
                     </ul>
                 </div>
             </div>
