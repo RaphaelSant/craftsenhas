@@ -30,7 +30,7 @@ export default function Navbar() {
     }
 
 
-    const decodedToken = jwtDecode(token);
+    //const decodedToken = jwtDecode(token);
 
     //console.log(userName);
     //console.log(token);
@@ -57,8 +57,8 @@ export default function Navbar() {
                                 <a className="nav-link dropdown-toggle" href="https://www.google.com" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Administrador
                                 </a>
-                                <ul className="dropdown-menu">
-                                    <li><a className="dropdown-item" href="https://www.google.com">Cadastrar Usuário</a></li>
+                                <ul className="dropdown-menu text-center">
+                                    <li><Link className="dropdown-item" to={"/CadastroUsuario"}>Cadastrar Usuário</Link></li>
                                     <li><a className="dropdown-item" href="https://www.google.com">Editar Usuário</a></li>
                                     <li><hr className="dropdown-divider" /></li>
                                     <li><a className="dropdown-item" href="https://www.google.com">Something else here</a></li>

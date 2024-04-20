@@ -5,6 +5,7 @@ const cors = require("cors");
 const verificarToken = require("./middlewares/authMiddleware.js");
 
 const loginController = require("./controllers/loginController.js");
+const cadUserController = require("./controllers/cadUserController.js");
 
 const app = express();
 app.use(cors());
@@ -17,6 +18,7 @@ app.get("/", (re, res) => {
 
 // Controllers
 app.use("/", loginController);
+app.post("/caduser", cadUserController);
 
 // Rota protegida
 app.get("/recursoProtegido", verificarToken, (req, res) => {
