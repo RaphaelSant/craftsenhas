@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { verificarAutenticacao } from "../autenticacao/index.jsx";
 import ErroPage from "../../pages/error/index.jsx";
 import CadastroUsuario from "../../pages/cadastroUsuario/index.jsx";
+import EditaUsuario from "../../pages/editaUsuario/index.jsx";
 
 export default function Rotas() {
     const [autenticado, setAutenticado] = useState(false);
@@ -39,6 +40,7 @@ export default function Rotas() {
                 {/* Acesso Restrito */}
                 <Route path="/PaginaInicial" element={autenticado ? <PaginaInicial /> : <ErroPage />} />
                 <Route path="/CadastroUsuario" element={autenticado ? <CadastroUsuario /> : <ErroPage />} />
+                <Route path="/EditaUsuario" element={autenticado ? <EditaUsuario /> : <ErroPage />} />
                 
             </Routes>
         </BrowserRouter>

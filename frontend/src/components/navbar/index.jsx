@@ -59,7 +59,7 @@ export default function Navbar() {
                                 </a>
                                 <ul className="dropdown-menu text-center">
                                     <li><Link className="dropdown-item" to={"/CadastroUsuario"}>Cadastrar Usuário</Link></li>
-                                    <li><a className="dropdown-item" href="https://www.google.com">Editar Usuário</a></li>
+                                    <li><Link className="dropdown-item" to={"/EditaUsuario"}>Editar Usuário</Link></li>
                                     <li><hr className="dropdown-divider" /></li>
                                     <li><a className="dropdown-item" href="https://www.google.com">Something else here</a></li>
                                 </ul>

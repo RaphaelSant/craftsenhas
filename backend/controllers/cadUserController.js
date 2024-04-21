@@ -40,20 +40,46 @@ router.post("/caduser", (req, res) => {
     });
 });
 
+// Rota para selecionar os dados por ID
+router.get("/caduser/selectId/:id", (req, res) => {
+    const id = req.params.id;
+    const sql = "SELECT * FROM usuarios WHERE id = ?"; // Consulta SQL para buscar o registro pelo ID
+    db.query(sql, id, (err, data) => {
+        if (err) return res.json(err);
+        if (data.length === 0) {
+            return res.json({ message: "Registro não encontrado" });
+        }
+        return res.json(data[0]); // Retorna o primeiro registro encontrado (se houver)
+    });
+});
+
 // Rota para atualizar dados
 router.put("/caduser/:id", (req, res) => {
     const id = req.params.id;
     const { usuario, nome_completo, senha, isAdmin } = req.body;
     const sql = "UPDATE usuarios SET usuario=?, nome_completo=?, senha=?, isAdmin=? WHERE id=?";
 
-    if (!cpf || !dataEntrada || !horaEntrada || !destino || !nome || !horaSaida) {
+    if (!usuario || !nome_completo || !senha) {
         return res.status(400).json({ message: "Todos os campos são obrigatórios." });
     }
 
-    db.query(sql, [cpf, dataEntrada, destino, horaEntrada, horaSaida, nome, id], (err, result) => {
+    db.query(sql, [usuario, nome_completo, senha, isAdmin, id], (err, result) => {
         if (err) return res.status(500).send(err);
 
         return res.status(200).json({ message: "Dados atualizados com sucesso!" });
+    });
+});
+
+// Rota para deletar dados.
+router.delete("/caduser/:id", (req, res) => {
+    const usuariosId = req.params.id;
+    const sql = `DELETE FROM usuarios WHERE id = ?`;
+    db.query(sql, usuariosId, (err, result) => {
+        if (err) return res.json(err);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "Registro não encontrado" });
+        }
+        return res.json({ message: "Registro deletado com sucesso" });
     });
 });
 
