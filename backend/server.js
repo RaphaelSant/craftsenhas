@@ -18,7 +18,7 @@ app.get("/", (re, res) => {
 
 // Controllers
 app.use("/", loginController);
-app.post("/caduser", cadUserController);
+app.use("/", cadUserController);
 
 // Rota protegida
 app.get("/recursoProtegido", verificarToken, (req, res) => {

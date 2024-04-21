@@ -2,60 +2,70 @@ import React, { useState } from "react";
 import Navbar from "../../components/navbar";
 import estiloCadUser from "./caduser.module.css";
 import axios from "axios"; // Importe o Axios
+import dbConfig from "../../components/util/dbConfig.jsx";
 
 export default function CadastroUsuario() {
-
     const [usuario, setUsuario] = useState("");
     const [nome_completo, setNome_completo] = useState("");
     const [senha, setSenha] = useState("");
-    const [isAdmin, setIsAdmin] = useState("");
+    const [isAdmin, setIsAdmin] = useState(0);
     const [validated, setValidated] = useState(false);
     const [confirmarSenha, setConfirmarSenha] = useState("");
     const [senhaError, setSenhaError] = useState("");
 
+    // Função para limpar todos os campos do formulário
+    const clearFormFields = () => {
+        setUsuario("");
+        setNome_completo("");
+        setSenha("");
+        setIsAdmin(0);
+        setValidated(false);
+        setConfirmarSenha("");
+        setSenhaError("");
+    };
+
     async function handleSubmit(event) {
+        event.preventDefault();
         const form = event.currentTarget;
         if (!form.checkValidity()) {
-            event.preventDefault();
             event.stopPropagation();
+            setValidated(true);
+            return;
         }
 
-        // Verifica se as senhas correspondem
         if (senha !== confirmarSenha) {
-            event.preventDefault();
             event.stopPropagation();
-            // Exibe mensagem de erro
             setSenhaError("As senhas não correspondem!");
             return;
         } else {
-            setSenhaError(""); // Limpa a mensagem de erro
+            setSenhaError("");
         }
 
-        setValidated(true);
-
-        // Envie os dados para o backend
         try {
-            const response = await axios.post("/caduser", {
-                usuario: usuario,
-                nome_completo: nome_completo,
-                senha: senha,
-                isAdmin: isAdmin
+            const response = await axios.post(`${dbConfig()}/caduser`, {
+                usuario,
+                nome_completo,
+                senha,
+                isAdmin
             });
+
             alert(response.data);
-            console.log(response.data); // Trate a resposta do backend conforme necessário
+            console.log(response.data);
+            if (response.status !== 400) {
+                clearFormFields();
+            }
         } catch (error) {
             console.error("Erro ao enviar dados para o backend:", error);
+            alert('Erro ao enviar dados para o backend:', error);
         }
     }
 
     return (
         <>
             <Navbar />
-
             <div className="container d-flex flex-column justify-content-center align-items-center">
                 <h1 className="text-center mt-3">Cadastro de usuário</h1>
                 <hr />
-
                 <form className={`${estiloCadUser.form_container} row g-3 ${validated ? 'was-validated' : ''}`} onSubmit={handleSubmit} noValidate>
                     <div className="col-md-12">
                         <label htmlFor="validationCustomUsername" className="form-label">Nome de Login</label>
@@ -76,7 +86,7 @@ export default function CadastroUsuario() {
                     </div>
                     <div className="col-12">
                         <div className="form-check">
-                            <input className="form-check-input" type="checkbox" id="invalidCheck2" value={isAdmin} onChange={(e) => setIsAdmin(e.target.value)} />
+                            <input className="form-check-input" type="checkbox" id="invalidCheck2" checked={isAdmin} onChange={(e) => setIsAdmin(e.target.checked)} />
                             <label className="form-check-label" htmlFor="invalidCheck2">
                                 Administrador
                             </label>
@@ -86,7 +96,6 @@ export default function CadastroUsuario() {
                         <button className="btn btn-success w-100" type="submit">Cadastrar Usuário</button>
                     </div>
                 </form>
-
             </div>
         </>
     );
